@@ -22,6 +22,7 @@ import { useDroppable } from '@dnd-kit/core';
 const useStyles = makeStyles({
   root: {
     backgroundColor: tokens.colorNeutralBackground3,
+    border: `1px solid ${tokens.colorNeutralStroke1}`,
     borderRadius: tokens.borderRadiusMedium,
     padding: '10px',
     minWidth: '280px',
