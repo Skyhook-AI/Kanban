@@ -36,6 +36,7 @@ export const Board = () => {
   const [boardData, setBoardData] = useState<BoardType>(() => StorageService.loadData());
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [startContainer, setStartContainer] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -90,12 +91,37 @@ export const Board = () => {
     setEditingTask(null);
   };
 
+  const triggerWebhook = async (task: Task) => {
+    const settings = StorageService.loadSettings();
+    if (!settings.webhookUrl) return;
+
+    try {
+      await fetch(settings.webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          taskId: task.id,
+          title: task.title,
+          status: 'Done',
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to trigger webhook:', error);
+    }
+  };
+
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const task = boardData.columns
       .flatMap((col) => col.tasks)
       .find((t) => t.id === active.id);
     setActiveTask(task || null);
+    
+    const container = findContainer(active.id as string);
+    setStartContainer(container || null);
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -167,6 +193,10 @@ export const Board = () => {
     const activeContainer = findContainer(active.id as string);
     const overContainer = findContainer(over?.id as string);
 
+    if (overContainer === 'done' && startContainer !== 'done' && activeTask) {
+      void triggerWebhook(activeTask);
+    }
+
     if (
       activeContainer &&
       overContainer &&
@@ -199,6 +229,7 @@ export const Board = () => {
         StorageService.saveData(boardData);
     }
     setActiveTask(null);
+    setStartContainer(null);
   };
 
   return (
