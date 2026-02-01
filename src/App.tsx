@@ -1,11 +1,16 @@
+import { FluentProvider, webLightTheme, webDarkTheme } from '@fluentui/react-components';
 import { Layout } from './Layout';
 import { Board } from './components/Board';
+import { useTheme } from './contexts/ThemeContext';
 
 function App() {
+  const { theme } = useTheme();
   return (
-    <Layout>
-      <Board />
-    </Layout>
+    <FluentProvider theme={theme === 'dark' ? webDarkTheme : webLightTheme}>
+      <Layout>
+        <Board />
+      </Layout>
+    </FluentProvider>
   );
 }
 
