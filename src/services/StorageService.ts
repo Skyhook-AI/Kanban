@@ -1,6 +1,7 @@
-import type { Board } from '../types/kanban';
+import type { Board, AppSettings } from '../types/kanban';
 
 const STORAGE_KEY = 'kanban-board-data';
+const SETTINGS_KEY = 'kanban-settings';
 
 const DEFAULT_DATA: Board = {
   columns: [
@@ -59,6 +60,26 @@ export class StorageService {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(board));
     } catch (error) {
       console.error('Failed to save data to storage:', error);
+    }
+  }
+
+  static loadSettings(): AppSettings {
+    try {
+      const data = localStorage.getItem(SETTINGS_KEY);
+      if (data) {
+        return JSON.parse(data) as AppSettings;
+      }
+    } catch (error) {
+      console.error('Failed to load settings from storage:', error);
+    }
+    return { webhookUrl: '' };
+  }
+
+  static saveSettings(settings: AppSettings): void {
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    } catch (error) {
+      console.error('Failed to save settings to storage:', error);
     }
   }
 }

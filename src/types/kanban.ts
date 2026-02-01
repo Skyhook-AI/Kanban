@@ -15,3 +15,7 @@ export interface Column {
 export interface Board {
   columns: Column[];
 }
+
+export interface AppSettings {
+  webhookUrl: string;
+}
