@@ -3,6 +3,7 @@ export interface Task {
   title: string;
   description?: string;
   dueDate?: string; // ISO date string
+  tags?: string[];
 }
 
 export interface Column {

@@ -5,6 +5,7 @@ import {
   Card,
   CardHeader,
   CardFooter,
+  Tag,
 } from '@fluentui/react-components';
 import ReactMarkdown from 'react-markdown';
 import { CalendarLtr24Regular } from '@fluentui/react-icons';
@@ -52,17 +53,25 @@ const useStyles = makeStyles({
       gap: '5px',
       color: tokens.colorNeutralForeground3,
       paddingTop: '8px',
+      flexWrap: 'wrap',
   },
   title: {
       wordBreak: 'break-word',
+  },
+  tags: {
+    display: 'flex',
+    gap: '4px',
+    flexWrap: 'wrap',
+    marginBottom: '8px',
   }
 });
 
 interface TaskCardProps {
   task: Task;
+  onClick?: () => void;
 }
 
-export const TaskCard = ({ task }: TaskCardProps) => {
+export const TaskCard = ({ task, onClick }: TaskCardProps) => {
   const styles = useStyles();
   const {
     attributes,
@@ -85,11 +94,23 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       {...attributes}
       {...listeners}
     >
-      <Card className={`${styles.card} ${isDragging ? styles.dragging : ''}`}>
+      <Card
+        className={`${styles.card} ${isDragging ? styles.dragging : ''}`}
+        onClick={onClick}
+      >
         <CardHeader
           header={<Text weight="semibold" className={styles.title}>{task.title}</Text>}
           description={<Text className={styles.id} size={200}>#{task.id}</Text>}
         />
+        {task.tags && task.tags.length > 0 && (
+          <div className={styles.tags}>
+            {task.tags.map((tag) => (
+              <Tag key={tag} size="extra-small" shape="circular">
+                {tag}
+              </Tag>
+            ))}
+          </div>
+        )}
         {task.description && (
           <div className={styles.description}>
               <ReactMarkdown>{task.description}</ReactMarkdown>

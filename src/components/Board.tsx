@@ -17,6 +17,7 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
 import { TaskCard } from './TaskCard';
+import { TaskDetailDialog } from './TaskDetailDialog';
 
 const useStyles = makeStyles({
   root: {
@@ -34,6 +35,7 @@ export const Board = () => {
   const styles = useStyles();
   const [boardData, setBoardData] = useState<BoardType>(() => StorageService.loadData());
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -73,6 +75,19 @@ export const Board = () => {
     const newBoardData = { ...boardData, columns: newColumns };
     setBoardData(newBoardData);
     StorageService.saveData(newBoardData);
+  };
+
+  const handleUpdateTask = (updatedTask: Task) => {
+    setBoardData((prev) => {
+      const newColumns = prev.columns.map((col) => ({
+        ...col,
+        tasks: col.tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)),
+      }));
+      const newBoard = { ...prev, columns: newColumns };
+      StorageService.saveData(newBoard);
+      return newBoard;
+    });
+    setEditingTask(null);
   };
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -196,12 +211,24 @@ export const Board = () => {
     >
       <div className={styles.root}>
         {boardData.columns.map((column) => (
-          <BoardColumn key={column.id} column={column} onAddTask={handleAddTask} />
+          <BoardColumn
+            key={column.id}
+            column={column}
+            onAddTask={handleAddTask}
+            onTaskClick={setEditingTask}
+          />
         ))}
       </div>
       <DragOverlay>
         {activeTask ? <TaskCard task={activeTask} /> : null}
       </DragOverlay>
+      <TaskDetailDialog
+        key={editingTask ? editingTask.id : 'closed'}
+        task={editingTask}
+        open={!!editingTask}
+        onOpenChange={(open) => !open && setEditingTask(null)}
+        onSave={handleUpdateTask}
+      />
     </DndContext>
   );
 };

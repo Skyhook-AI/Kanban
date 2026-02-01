@@ -15,7 +15,7 @@ import {
 } from '@fluentui/react-components';
 import { Add24Regular } from '@fluentui/react-icons';
 import { useState, useMemo } from 'react';
-import type { Column as ColumnType } from '../types/kanban';
+import type { Column as ColumnType, Task } from '../types/kanban';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 
@@ -56,11 +56,12 @@ const useStyles = makeStyles({
 interface BoardColumnProps {
   column: ColumnType;
   onAddTask: (columnId: string, title: string) => void;
+  onTaskClick: (task: Task) => void;
 }
 
 import { TaskCard } from './TaskCard';
 
-export const BoardColumn = ({ column, onAddTask }: BoardColumnProps) => {
+export const BoardColumn = ({ column, onAddTask, onTaskClick }: BoardColumnProps) => {
   const styles = useStyles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -117,7 +118,7 @@ export const BoardColumn = ({ column, onAddTask }: BoardColumnProps) => {
       <div ref={setNodeRef} className={styles.taskList}>
         <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
           {column.tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+            <TaskCard key={task.id} task={task} onClick={() => onTaskClick(task)} />
           ))}
         </SortableContext>
       </div>

@@ -3,10 +3,10 @@
   "sessionId": "495a98a2-3b2d-4ecb-821d-b76f12ce6391",
   "status": "running",
   "startedAt": "2026-02-01T11:41:57.731Z",
-  "updatedAt": "2026-02-01T11:57:01.308Z",
-  "currentIteration": 5,
+  "updatedAt": "2026-02-01T12:00:25.508Z",
+  "currentIteration": 6,
   "maxIterations": 10,
-  "tasksCompleted": 5,
+  "tasksCompleted": 6,
   "isPaused": false,
   "agentPlugin": "opencode",
   "trackerState": {
@@ -47,8 +47,8 @@
       {
         "id": "US-006",
         "title": "Drag and Drop Implementation",
-        "status": "open",
-        "completedInSession": false
+        "status": "completed",
+        "completedInSession": true
       },
       {
         "id": "US-007",
@@ -126,12 +126,22 @@
       "durationMs": 143947,
       "startedAt": "2026-02-01T11:54:36.342Z",
       "endedAt": "2026-02-01T11:57:00.289Z"
+    },
+    {
+      "iteration": 6,
+      "status": "completed",
+      "taskId": "US-006",
+      "taskTitle": "Drag and Drop Implementation",
+      "taskCompleted": true,
+      "durationMs": 203192,
+      "startedAt": "2026-02-01T11:57:01.297Z",
+      "endedAt": "2026-02-01T12:00:24.489Z"
     }
   ],
   "skippedTaskIds": [],
   "cwd": "/Users/openclaw/Repos/Kanban",
   "activeTaskIds": [
-    "US-006"
+    "US-007"
   ],
   "subagentPanelVisible": false
 }
