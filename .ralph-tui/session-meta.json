@@ -1,0 +1,14 @@
+{
+  "id": "495a98a2-3b2d-4ecb-821d-b76f12ce6391",
+  "status": "running",
+  "startedAt": "2026-02-01T11:41:56.907Z",
+  "updatedAt": "2026-02-01T11:41:56.907Z",
+  "agentPlugin": "opencode",
+  "trackerPlugin": "json",
+  "prdPath": "./tasks/prd.json",
+  "currentIteration": 0,
+  "maxIterations": 10,
+  "totalTasks": 0,
+  "tasksCompleted": 0,
+  "cwd": "/Users/openclaw/Repos/Kanban"
+}

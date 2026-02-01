@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "sessionId": "495a98a2-3b2d-4ecb-821d-b76f12ce6391",
+  "status": "running",
+  "startedAt": "2026-02-01T11:41:57.731Z",
+  "updatedAt": "2026-02-01T11:42:26.745Z",
+  "currentIteration": 0,
+  "maxIterations": 10,
+  "tasksCompleted": 0,
+  "isPaused": false,
+  "agentPlugin": "opencode",
+  "trackerState": {
+    "plugin": "json",
+    "prdPath": "./tasks/prd.json",
+    "totalTasks": 10,
+    "tasks": [
+      {
+        "id": "US-001",
+        "title": "Project Scaffolding & Fluent UI Setup",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-002",
+        "title": "Implement Data Service (LocalStorage)",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-003",
+        "title": "Board Layout & Columns",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-004",
+        "title": "Create New Task",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-005",
+        "title": "Task Card & Markdown Rendering",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-006",
+        "title": "Drag and Drop Implementation",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-007",
+        "title": "Task Details & Editing",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-008",
+        "title": "Settings & Webhook Configuration",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-009",
+        "title": "Webhook Triggers",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-010",
+        "title": "Progress Dashboard",
+        "status": "open",
+        "completedInSession": false
+      }
+    ]
+  },
+  "iterations": [],
+  "skippedTaskIds": [],
+  "cwd": "/Users/openclaw/Repos/Kanban",
+  "activeTaskIds": [
+    "US-001"
+  ],
+  "subagentPanelVisible": false
+}
