@@ -18,15 +18,22 @@ import {
 import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
 import { TaskCard } from './TaskCard';
 import { TaskDetailDialog } from './TaskDetailDialog';
+import { ProgressDashboard } from './ProgressDashboard';
 
 const useStyles = makeStyles({
-  root: {
+  boardContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    padding: '10px',
+    gap: '20px',
+  },
+  columnsContainer: {
     display: 'flex',
     flexDirection: 'row',
     gap: '20px',
     height: '100%',
     overflowX: 'auto',
-    padding: '10px',
     alignItems: 'flex-start',
   },
 });
@@ -240,15 +247,18 @@ export const Board = () => {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className={styles.root}>
-        {boardData.columns.map((column) => (
-          <BoardColumn
-            key={column.id}
-            column={column}
-            onAddTask={handleAddTask}
-            onTaskClick={setEditingTask}
-          />
-        ))}
+      <div className={styles.boardContainer}>
+        <ProgressDashboard columns={boardData.columns} />
+        <div className={styles.columnsContainer}>
+          {boardData.columns.map((column) => (
+            <BoardColumn
+              key={column.id}
+              column={column}
+              onAddTask={handleAddTask}
+              onTaskClick={setEditingTask}
+            />
+          ))}
+        </div>
       </div>
       <DragOverlay>
         {activeTask ? <TaskCard task={activeTask} /> : null}
