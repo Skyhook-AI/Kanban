@@ -5,16 +5,27 @@ const STORAGE_KEY = 'kanban-board-data';
 const DEFAULT_DATA: Board = {
   columns: [
     {
-      id: 'todo',
-      title: 'To Do',
+      id: 'backlog',
+      title: 'Backlog',
       tasks: [
         { id: '1', title: 'Welcome to Kanban', description: 'This is a sample task.' },
+      ],
+    },
+    {
+      id: 'ready',
+      title: 'Ready',
+      tasks: [],
+    },
+    {
+      id: 'in-progress',
+      title: 'In Progress',
+      tasks: [
         { id: '2', title: 'Try moving this task', description: 'Drag and drop is coming soon!' },
       ],
     },
     {
-      id: 'inprogress',
-      title: 'In Progress',
+      id: 'in-review',
+      title: 'In Review',
       tasks: [],
     },
     {
