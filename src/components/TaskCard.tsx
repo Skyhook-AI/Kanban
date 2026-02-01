@@ -8,6 +8,8 @@ import {
 } from '@fluentui/react-components';
 import ReactMarkdown from 'react-markdown';
 import { CalendarLtr24Regular } from '@fluentui/react-icons';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { Task } from '../types/kanban';
 
 const useStyles = makeStyles({
@@ -15,6 +17,12 @@ const useStyles = makeStyles({
     width: '100%',
     maxWidth: '100%',
     height: 'fit-content',
+    cursor: 'grab',
+    touchAction: 'none',
+  },
+  dragging: {
+    opacity: 0.5,
+    cursor: 'grabbing',
   },
   description: {
     margin: '10px 0',
@@ -56,24 +64,44 @@ interface TaskCardProps {
 
 export const TaskCard = ({ task }: TaskCardProps) => {
   const styles = useStyles();
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id, data: { type: 'Task', task } });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   return (
-    <Card className={styles.card}>
-      <CardHeader
-        header={<Text weight="semibold" className={styles.title}>{task.title}</Text>}
-        description={<Text className={styles.id} size={200}>#{task.id}</Text>}
-      />
-      {task.description && (
-        <div className={styles.description}>
-            <ReactMarkdown>{task.description}</ReactMarkdown>
-        </div>
-      )}
-      {task.dueDate && (
-        <CardFooter className={styles.footer}>
-            <CalendarLtr24Regular fontSize={16} />
-            <Text size={200}>{new Date(task.dueDate).toLocaleDateString()}</Text>
-        </CardFooter>
-      )}
-    </Card>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
+      <Card className={`${styles.card} ${isDragging ? styles.dragging : ''}`}>
+        <CardHeader
+          header={<Text weight="semibold" className={styles.title}>{task.title}</Text>}
+          description={<Text className={styles.id} size={200}>#{task.id}</Text>}
+        />
+        {task.description && (
+          <div className={styles.description}>
+              <ReactMarkdown>{task.description}</ReactMarkdown>
+          </div>
+        )}
+        {task.dueDate && (
+          <CardFooter className={styles.footer}>
+              <CalendarLtr24Regular fontSize={16} />
+              <Text size={200}>{new Date(task.dueDate).toLocaleDateString()}</Text>
+          </CardFooter>
+        )}
+      </Card>
+    </div>
   );
 };

@@ -14,8 +14,10 @@ import {
   Label,
 } from '@fluentui/react-components';
 import { Add24Regular } from '@fluentui/react-icons';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { Column as ColumnType } from '../types/kanban';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
 
 const useStyles = makeStyles({
   root: {
@@ -42,6 +44,7 @@ const useStyles = makeStyles({
     gap: '8px',
     flexGrow: 1,
     overflowY: 'auto',
+    minHeight: '100px', // Ensure drop target area
   },
   dialogContent: {
     display: 'flex',
@@ -61,6 +64,13 @@ export const BoardColumn = ({ column, onAddTask }: BoardColumnProps) => {
   const styles = useStyles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
+
+  const taskIds = useMemo(() => column.tasks.map((t) => t.id), [column.tasks]);
+
+  const { setNodeRef } = useDroppable({
+    id: column.id,
+    data: { type: 'Column', column },
+  });
 
   const handleAddTask = () => {
     if (newTaskTitle.trim()) {
@@ -104,10 +114,12 @@ export const BoardColumn = ({ column, onAddTask }: BoardColumnProps) => {
           </Dialog>
         )}
       </div>
-      <div className={styles.taskList}>
-        {column.tasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
-        ))}
+      <div ref={setNodeRef} className={styles.taskList}>
+        <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
+          {column.tasks.map((task) => (
+            <TaskCard key={task.id} task={task} />
+          ))}
+        </SortableContext>
       </div>
     </div>
   );
