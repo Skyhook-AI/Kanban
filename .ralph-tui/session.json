@@ -3,10 +3,10 @@
   "sessionId": "495a98a2-3b2d-4ecb-821d-b76f12ce6391",
   "status": "running",
   "startedAt": "2026-02-01T11:41:57.731Z",
-  "updatedAt": "2026-02-01T11:42:26.745Z",
-  "currentIteration": 0,
+  "updatedAt": "2026-02-01T11:54:36.354Z",
+  "currentIteration": 4,
   "maxIterations": 10,
-  "tasksCompleted": 0,
+  "tasksCompleted": 4,
   "isPaused": false,
   "agentPlugin": "opencode",
   "trackerState": {
@@ -17,26 +17,26 @@
       {
         "id": "US-001",
         "title": "Project Scaffolding & Fluent UI Setup",
-        "status": "open",
-        "completedInSession": false
+        "status": "completed",
+        "completedInSession": true
       },
       {
         "id": "US-002",
         "title": "Implement Data Service (LocalStorage)",
-        "status": "open",
-        "completedInSession": false
+        "status": "completed",
+        "completedInSession": true
       },
       {
         "id": "US-003",
         "title": "Board Layout & Columns",
-        "status": "open",
-        "completedInSession": false
+        "status": "completed",
+        "completedInSession": true
       },
       {
         "id": "US-004",
         "title": "Create New Task",
-        "status": "open",
-        "completedInSession": false
+        "status": "completed",
+        "completedInSession": true
       },
       {
         "id": "US-005",
@@ -76,11 +76,52 @@
       }
     ]
   },
-  "iterations": [],
+  "iterations": [
+    {
+      "iteration": 1,
+      "status": "completed",
+      "taskId": "US-001",
+      "taskTitle": "Project Scaffolding & Fluent UI Setup",
+      "taskCompleted": true,
+      "durationMs": 382449,
+      "startedAt": "2026-02-01T11:42:26.741Z",
+      "endedAt": "2026-02-01T11:48:49.190Z"
+    },
+    {
+      "iteration": 2,
+      "status": "completed",
+      "taskId": "US-002",
+      "taskTitle": "Implement Data Service (LocalStorage)",
+      "taskCompleted": true,
+      "durationMs": 72169,
+      "startedAt": "2026-02-01T11:48:50.288Z",
+      "endedAt": "2026-02-01T11:50:02.457Z"
+    },
+    {
+      "iteration": 3,
+      "status": "completed",
+      "taskId": "US-003",
+      "taskTitle": "Board Layout & Columns",
+      "taskCompleted": true,
+      "durationMs": 140228,
+      "startedAt": "2026-02-01T11:50:03.467Z",
+      "endedAt": "2026-02-01T11:52:23.695Z"
+    },
+    {
+      "iteration": 4,
+      "status": "completed",
+      "taskId": "US-004",
+      "taskTitle": "Create New Task",
+      "taskCompleted": true,
+      "durationMs": 130629,
+      "startedAt": "2026-02-01T11:52:24.704Z",
+      "endedAt": "2026-02-01T11:54:35.333Z"
+    }
+  ],
   "skippedTaskIds": [],
   "cwd": "/Users/openclaw/Repos/Kanban",
   "activeTaskIds": [
-    "US-001"
+    "US-005"
   ],
   "subagentPanelVisible": false
 }

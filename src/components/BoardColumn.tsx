@@ -43,12 +43,6 @@ const useStyles = makeStyles({
     flexGrow: 1,
     overflowY: 'auto',
   },
-  taskCard: {
-    backgroundColor: tokens.colorNeutralBackground1,
-    padding: '10px',
-    borderRadius: tokens.borderRadiusSmall,
-    boxShadow: tokens.shadow2,
-  },
   dialogContent: {
     display: 'flex',
     flexDirection: 'column',
@@ -60,6 +54,8 @@ interface BoardColumnProps {
   column: ColumnType;
   onAddTask: (columnId: string, title: string) => void;
 }
+
+import { TaskCard } from './TaskCard';
 
 export const BoardColumn = ({ column, onAddTask }: BoardColumnProps) => {
   const styles = useStyles();
@@ -110,10 +106,7 @@ export const BoardColumn = ({ column, onAddTask }: BoardColumnProps) => {
       </div>
       <div className={styles.taskList}>
         {column.tasks.map((task) => (
-          <div key={task.id} className={styles.taskCard}>
-            <Text weight="semibold" block>{task.title}</Text>
-            {task.description && <Text size={200}>{task.description}</Text>}
-          </div>
+          <TaskCard key={task.id} task={task} />
         ))}
       </div>
     </div>

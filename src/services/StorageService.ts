@@ -8,7 +8,12 @@ const DEFAULT_DATA: Board = {
       id: 'backlog',
       title: 'Backlog',
       tasks: [
-        { id: '1', title: 'Welcome to Kanban', description: 'This is a sample task.' },
+        {
+          id: '1',
+          title: 'Welcome to Kanban',
+          description: 'This is a **sample** task with [Markdown](https://commonmark.org).',
+          dueDate: new Date(Date.now() + 86400000).toISOString(),
+        },
       ],
     },
     {
