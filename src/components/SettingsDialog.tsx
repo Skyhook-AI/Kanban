@@ -8,11 +8,13 @@ import {
   Button,
   Input,
   Label,
+  Switch,
   makeStyles,
   tokens,
 } from "@fluentui/react-components";
 import { useState, useEffect } from "react";
 import { StorageService } from "../services/StorageService";
+import { useTheme } from "../contexts/ThemeContext";
 
 const useStyles = makeStyles({
   content: {
@@ -43,6 +45,7 @@ export const SettingsDialog = ({
   onOpenChange,
 }: SettingsDialogProps) => {
   const styles = useStyles();
+  const { theme, toggleTheme } = useTheme();
   const [webhookUrl, setWebhookUrl] = useState("");
   const [testStatus, setTestStatus] = useState<string | null>(null);
   const [isTestSuccess, setIsTestSuccess] = useState<boolean>(false);
@@ -104,6 +107,15 @@ export const SettingsDialog = ({
         <DialogBody>
           <DialogTitle>Settings</DialogTitle>
           <DialogContent className={styles.content}>
+            <div className={styles.field}>
+              <Label htmlFor="theme-toggle">Theme</Label>
+              <Switch
+                id="theme-toggle"
+                checked={theme === 'dark'}
+                onChange={toggleTheme}
+                label={theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+              />
+            </div>
             <div className={styles.field}>
               <Label htmlFor="webhook-url">Webhook URL</Label>
               <Input
