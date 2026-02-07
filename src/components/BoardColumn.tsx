@@ -86,7 +86,7 @@ export const BoardColumn = ({ column, onAddTask, onTaskClick }: BoardColumnProps
     <div className={styles.root}>
       <div className={styles.header}>
         <Text weight="bold" size={400}>{column.title}</Text>
-        {column.id === 'backlog' && (
+        {column.id === 'backlog' && !column.readonly && (
           <Dialog open={isDialogOpen} onOpenChange={(_, data) => setIsDialogOpen(data.open)}>
             <DialogTrigger disableButtonEnhancement>
               <Button icon={<Add24Regular />} appearance="subtle" aria-label="Add Task" />

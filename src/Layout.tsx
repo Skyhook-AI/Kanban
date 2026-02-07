@@ -46,9 +46,11 @@ const useStyles = makeStyles({
 
 interface LayoutProps {
   children: ReactNode;
+  taskCount?: number;
+  error?: string;
 }
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ children, taskCount, error }: LayoutProps) => {
   const styles = useStyles();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -56,7 +58,19 @@ export const Layout = ({ children }: LayoutProps) => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <span>Kanban Board</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span>Kanban Board</span>
+          {taskCount !== undefined && (
+            <span style={{ fontSize: '14px', opacity: 0.8 }}>
+              {taskCount} tasks
+            </span>
+          )}
+          {error && (
+             <span style={{ fontSize: '14px', color: tokens.colorPaletteRedForeground1 }}>
+               Error: {error}
+             </span>
+          )}
+        </div>
         <div className={styles.controls}>
           <WeatherSunny24Regular className={styles.themeIcon} />
           <Switch

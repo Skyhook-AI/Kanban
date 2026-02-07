@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { makeStyles } from '@fluentui/react-components';
 import { BoardColumn } from './BoardColumn';
 import { StorageService } from '../services/StorageService';
-import type { Board as BoardType, Task } from '../types/kanban';
+import type { Board as BoardType, Task, Column } from '../types/kanban';
+import type { Prd } from '../types/prd';
 import {
   DndContext,
   DragOverlay,
@@ -38,9 +39,49 @@ const useStyles = makeStyles({
   },
 });
 
-export const Board = () => {
+const mapPrdToBoard = (prd: Prd): BoardType => {
+  const newColumns: Column[] = [
+    { id: 'todo', title: 'To Do', tasks: [], readonly: true },
+    { id: 'in_progress', title: 'In Progress', tasks: [], readonly: true },
+    { id: 'done', title: 'Done', tasks: [], readonly: true },
+    { id: 'backlog', title: 'Backlog', tasks: [], readonly: true },
+  ];
+
+  prd.userStories.forEach((story) => {
+    const task: Task = {
+      id: story.id,
+      title: story.title,
+      description: story.description,
+      readonly: true,
+    };
+
+    const status = story.status?.toLowerCase();
+    if (status === 'todo') {
+      newColumns[0].tasks.push(task);
+    } else if (status === 'in_progress') {
+      newColumns[1].tasks.push(task);
+    } else if (status === 'done') {
+      newColumns[2].tasks.push(task);
+    } else {
+      newColumns[3].tasks.push(task);
+    }
+  });
+
+  return { columns: newColumns };
+};
+
+interface BoardProps {
+  prd: Prd | null;
+}
+
+export const Board = ({ prd }: BoardProps) => {
   const styles = useStyles();
-  const [boardData, setBoardData] = useState<BoardType>(() => StorageService.loadData());
+  const [boardData, setBoardData] = useState<BoardType>(() => {
+    if (prd) {
+      return mapPrdToBoard(prd);
+    }
+    return StorageService.loadData();
+  });
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [startContainer, setStartContainer] = useState<string | null>(null);

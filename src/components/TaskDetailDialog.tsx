@@ -85,7 +85,7 @@ export const TaskDetailDialog = ({
     <Dialog open={open} onOpenChange={(_, data) => onOpenChange(data.open)}>
       <DialogSurface>
         <DialogBody>
-          <DialogTitle>Edit Task</DialogTitle>
+          <DialogTitle>{task.readonly ? 'View Task' : 'Edit Task'}</DialogTitle>
           <DialogContent className={styles.content}>
             <div className={styles.field}>
               <Label htmlFor="task-title">Title</Label>
@@ -93,6 +93,7 @@ export const TaskDetailDialog = ({
                 id="task-title"
                 value={title}
                 onChange={(_, data) => setTitle(data.value)}
+                readOnly={task.readonly}
               />
             </div>
 
@@ -103,6 +104,7 @@ export const TaskDetailDialog = ({
                 value={description}
                 onChange={(_, data) => setDescription(data.value)}
                 resize="vertical"
+                readOnly={task.readonly}
               />
             </div>
 
@@ -113,31 +115,34 @@ export const TaskDetailDialog = ({
                 type="date"
                 value={dueDate}
                 onChange={(_, data) => setDueDate(data.value)}
+                readOnly={task.readonly}
               />
             </div>
 
             <div className={styles.field}>
               <Label htmlFor="task-tags">Tags</Label>
-              <div style={{ display: "flex", gap: "5px" }}>
-                <Input
-                  id="task-tags"
-                  value={newTag}
-                  onChange={(_, data) => setNewTag(data.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleAddTag();
-                    }
-                  }}
-                  placeholder="Type tag and press Enter"
-                />
-                <Button onClick={handleAddTag}>Add</Button>
-              </div>
+              {!task.readonly && (
+                <div style={{ display: "flex", gap: "5px" }}>
+                  <Input
+                    id="task-tags"
+                    value={newTag}
+                    onChange={(_, data) => setNewTag(data.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleAddTag();
+                      }
+                    }}
+                    placeholder="Type tag and press Enter"
+                  />
+                  <Button onClick={handleAddTag}>Add</Button>
+                </div>
+              )}
               <div className={styles.tags}>
                 {tags.map((tag) => (
                   <Tag
                     key={tag}
-                    dismissible
-                    onClick={() => handleRemoveTag(tag)}
+                    dismissible={!task.readonly}
+                    onClick={() => !task.readonly && handleRemoveTag(tag)}
                     shape="circular"
                   >
                     {tag}
@@ -148,11 +153,13 @@ export const TaskDetailDialog = ({
           </DialogContent>
           <DialogActions>
             <Button appearance="secondary" onClick={() => onOpenChange(false)}>
-              Cancel
+              {task.readonly ? 'Close' : 'Cancel'}
             </Button>
-            <Button appearance="primary" onClick={handleSave}>
-              Save
-            </Button>
+            {!task.readonly && (
+              <Button appearance="primary" onClick={handleSave}>
+                Save
+              </Button>
+            )}
           </DialogActions>
         </DialogBody>
       </DialogSurface>

@@ -8,7 +8,7 @@ import {
   Tag,
 } from '@fluentui/react-components';
 import ReactMarkdown from 'react-markdown';
-import { CalendarLtr24Regular } from '@fluentui/react-icons';
+import { CalendarLtr24Regular, LockClosed16Regular } from '@fluentui/react-icons';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Task } from '../types/kanban';
@@ -21,6 +21,9 @@ const useStyles = makeStyles({
     cursor: 'grab',
     touchAction: 'none',
     backgroundColor: tokens.colorNeutralBackground1,
+  },
+  readOnlyCard: {
+    cursor: 'default',
   },
   dragging: {
     opacity: 0.5,
@@ -81,7 +84,7 @@ export const TaskCard = ({ task, onClick }: TaskCardProps) => {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: task.id, data: { type: 'Task', task } });
+  } = useSortable({ id: task.id, data: { type: 'Task', task }, disabled: task.readonly });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -96,12 +99,13 @@ export const TaskCard = ({ task, onClick }: TaskCardProps) => {
       {...listeners}
     >
       <Card
-        className={`${styles.card} ${isDragging ? styles.dragging : ''}`}
+        className={`${styles.card} ${isDragging ? styles.dragging : ''} ${task.readonly ? styles.readOnlyCard : ''}`}
         onClick={onClick}
       >
         <CardHeader
           header={<Text weight="semibold" className={styles.title}>{task.title}</Text>}
           description={<Text className={styles.id} size={200}>#{task.id}</Text>}
+          action={task.readonly ? <LockClosed16Regular /> : undefined}
         />
         {task.tags && task.tags.length > 0 && (
           <div className={styles.tags}>

@@ -13,9 +13,8 @@
         "Display the count of loaded tasks in the UI"
       ],
       "priority": 1,
-      "passes": true,
-      "dependsOn": [],
-      "completionNotes": "Completed by agent"
+      "passes": false,
+      "dependsOn": []
     },
     {
       "id": "US-002",
@@ -29,11 +28,10 @@
         "Render basic card information (Title, ID) in the column"
       ],
       "priority": 2,
-      "passes": true,
+      "passes": false,
       "dependsOn": [
         "US-001"
-      ],
-      "completionNotes": "Completed by agent"
+      ]
     },
     {
       "id": "US-003",
@@ -46,11 +44,10 @@
         "Debounce rapid updates to prevent UI flickering"
       ],
       "priority": 3,
-      "passes": true,
+      "passes": false,
       "dependsOn": [
         "US-001"
-      ],
-      "completionNotes": "Completed by agent"
+      ]
     },
     {
       "id": "US-004",
@@ -62,14 +59,13 @@
         "Visual indication (e.g., lock icon or badge) that these items are managed externally via `prd.json`"
       ],
       "priority": 4,
-      "passes": true,
+      "passes": false,
       "dependsOn": [
         "US-002"
-      ],
-      "completionNotes": "Completed by agent"
+      ]
     }
   ],
   "metadata": {
-    "updatedAt": "2026-02-07T01:50:35.358Z"
+    "updatedAt": "2026-02-07T01:38:11.829Z"
   }
 }

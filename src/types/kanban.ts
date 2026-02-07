@@ -4,12 +4,14 @@ export interface Task {
   description?: string;
   dueDate?: string; // ISO date string
   tags?: string[];
+  readonly?: boolean;
 }
 
 export interface Column {
   id: string;
   title: string;
   tasks: Task[];
+  readonly?: boolean;
 }
 
 export interface Board {
