@@ -6,9 +6,17 @@ import {
   CardHeader,
   CardFooter,
   Tag,
+  Badge,
 } from '@fluentui/react-components';
 import ReactMarkdown from 'react-markdown';
-import { CalendarLtr24Regular, LockClosed16Regular } from '@fluentui/react-icons';
+import {
+  CalendarLtr24Regular,
+  LockClosed16Regular,
+  Important16Regular,
+  CheckmarkCircle16Regular,
+  DismissCircle16Regular,
+  Link16Regular,
+} from '@fluentui/react-icons';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Task } from '../types/kanban';
@@ -54,10 +62,15 @@ const useStyles = makeStyles({
   footer: {
       display: 'flex',
       alignItems: 'center',
-      gap: '5px',
+      gap: '8px',
       color: tokens.colorNeutralForeground3,
       paddingTop: '8px',
       flexWrap: 'wrap',
+  },
+  footerItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
   },
   title: {
       wordBreak: 'break-word',
@@ -91,6 +104,12 @@ export const TaskCard = ({ task, onClick }: TaskCardProps) => {
     transition,
   };
 
+  const getPriorityColor = (priority: number) => {
+    if (priority <= 1) return 'danger';
+    if (priority <= 3) return 'warning';
+    return 'success';
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -121,12 +140,38 @@ export const TaskCard = ({ task, onClick }: TaskCardProps) => {
               <ReactMarkdown>{task.description}</ReactMarkdown>
           </div>
         )}
-        {task.dueDate && (
-          <CardFooter className={styles.footer}>
-              <CalendarLtr24Regular fontSize={16} />
-              <Text size={200}>{new Date(task.dueDate).toLocaleDateString()}</Text>
-          </CardFooter>
-        )}
+        
+        <CardFooter className={styles.footer}>
+          {task.priority !== undefined && (
+             <Badge 
+               appearance="tint" 
+               color={getPriorityColor(task.priority)} 
+               icon={<Important16Regular />}
+             >
+                P{task.priority}
+             </Badge>
+          )}
+
+          {task.passes !== undefined && (
+             task.passes ?
+               <Badge appearance="tint" color="success" icon={<CheckmarkCircle16Regular />}>Pass</Badge> :
+               <Badge appearance="tint" color="danger" icon={<DismissCircle16Regular />}>Fail</Badge>
+          )}
+
+          {task.dependsOn && task.dependsOn.length > 0 && (
+             <div className={styles.footerItem} title={`Depends on: ${task.dependsOn.join(', ')}`}>
+                <Link16Regular />
+                <Text size={200}>{task.dependsOn.length}</Text>
+             </div>
+          )}
+
+          {task.dueDate && (
+             <div className={styles.footerItem}>
+               <CalendarLtr24Regular fontSize={16} />
+               <Text size={200}>{new Date(task.dueDate).toLocaleDateString()}</Text>
+             </div>
+          )}
+        </CardFooter>
       </Card>
     </div>
   );

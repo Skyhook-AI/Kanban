@@ -53,10 +53,20 @@ const mapPrdToBoard = (prd: Prd): BoardType => {
       title: story.title,
       description: story.description,
       readonly: true,
+      priority: story.priority,
+      passes: story.passes,
+      dependsOn: story.dependsOn,
     };
 
     const status = story.status?.toLowerCase();
-    if (status === 'todo') {
+    
+    if (typeof story.passes === 'boolean') {
+      if (story.passes) {
+        newColumns[2].tasks.push(task); // Done
+      } else {
+        newColumns[0].tasks.push(task); // Todo
+      }
+    } else if (status === 'todo') {
       newColumns[0].tasks.push(task);
     } else if (status === 'in_progress') {
       newColumns[1].tasks.push(task);

@@ -5,6 +5,9 @@ export interface Task {
   dueDate?: string; // ISO date string
   tags?: string[];
   readonly?: boolean;
+  priority?: number;
+  passes?: boolean;
+  dependsOn?: string[];
 }
 
 export interface Column {

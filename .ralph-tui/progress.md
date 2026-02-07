@@ -5,53 +5,74 @@ after each iteration and it's included in prompts for context.
 
 ## Codebase Patterns (Study These First)
 
-- **Data Loading:** Configuration/Data files like `prd.json` are expected to be in `public/` to be accessible by the client-side application via `fetch`.
-- **UI Structure:** `Layout.tsx` wraps the application and handles global UI elements like headers and themes. Data is often lifted to `App.tsx` to be shared.
-- **Real-time Updates:** Use custom Vite plugins to watch external files (like `public/prd.json`) and trigger client-side updates via `import.meta.hot.on`.
+- **Type Imports:** Use `import type` for type definitions as `verbatimModuleSyntax` is enabled.
+- **Services:** Implement services as static classes (e.g., `FileSystemService`, `StorageService`).
+- **File System:** Use `FileSystemService` for file interactions; types are defined in `src/types/fileSystem.ts`.
 
 ---
 
 ## 2026-02-07 - US-001
-- Implemented `PrdService` to fetch and parse `prd.json`.
-- Defined TypeScript interfaces for PRD data in `src/types/prd.ts`.
-- Updated `App.tsx` to load PRD data on startup.
-- Updated `Layout.tsx` to display the task count in the header.
-- Copied `tasks/PRD.json` to `public/prd.json` to seed the data.
+- Implemented `FileSystemService` wrapping `window.showOpenFilePicker` and file reading.
+- Created `src/types/fileSystem.ts` to define File System Access API types.
+- Files changed:
+  - `src/services/FileSystemService.ts`
+  - `src/types/fileSystem.ts`
 - **Learnings:**
-  - `prd.json` capitalization matters; the source was `PRD.json` but requirements asked for `prd.json`.
-  - Fluent UI `tokens` are used for styling in `Layout`.
-  - `verbatimModuleSyntax` requires `import type` for type-only imports.
+  - The project uses `verbatimModuleSyntax`, requiring explicit `import type`.
+  - File System Access API types were manually defined to ensure type safety without relying on unstable global definitions.
+  - Implemented robust error handling for user cancellation and permission denial.
 ---
 
 ## 2026-02-07 - US-002
-- Implemented mapping of statuses from `prd.json` to Kanban columns.
-- Updated `Prd` and `UserStory` types to include optional `status`.
-- Updated `Board` component to accept `prd` data and initialize board columns based on it.
-- Updated `App` component to pass `prd` data to `Board` and force remount on update using `key`.
+- Implemented file picker in Settings dialog using `FileSystemService`.
+- Updated `PrdService` to support loading from a `FileSystemFileHandle` stored in memory.
+- Added event-based communication (`prd-local-load`) to trigger data reload in `App` when a file is selected.
+- Files changed:
+  - `src/components/SettingsDialog.tsx`
+  - `src/services/PrdService.ts`
+  - `src/App.tsx`
 - **Learnings:**
-  - `prd.json` lacks a `status` field by default, had to add it to the type and the file for verification.
-  - `Board` component state initialization needs to handle both local storage and PRD data sources.
-  - Used `key` prop on `Board` to force re-initialization of state when `prd` data loads or updates.
+  - Used `window.dispatchEvent` as a lightweight mechanism to trigger global data reloads from nested components without complex Context/State lifting for this specific action.
+  - Persisting `FileSystemFileHandle` in memory (static class property) survives component unmounts but resets on page reload, which meets the "gracefully handle reset" criteria.
 ---
 
 ## 2026-02-07 - US-003
-- Implemented `fsWatcherPlugin` in `vite.config.ts` to watch `public/prd.json`.
-- Added HMR event listener in `App.tsx` to reload data on `prd-update` event.
-- Updated `PrdService` to support cache-busting timestamp for fresh data.
+- Implemented real-time file watcher in `PrdService` using `setInterval` polling (every 2s).
+- Added `lastSynced` state to `App` and passed it to `Layout` for UI feedback.
+- Files changed:
+  - `src/services/PrdService.ts`: Added `startWatching`/`stopWatching` logic.
+  - `src/App.tsx`: Added `lastSynced` state and update logic.
+  - `src/Layout.tsx`: Added "Synced: [time]" indicator.
 - **Learnings:**
-  - Vite's `server.watcher` (chokidar) allows watching arbitrary files outside the module graph.
-  - `import.meta.hot.on` is the mechanism to receive custom events in the client.
-  - Debouncing is necessary for file watchers as editors often trigger multiple events on save.
+  - `FileSystemFileHandle.getFile()` provides a fresh `File` object with updated `lastModified` timestamp, making polling effective for detecting external changes.
+  - Reused `window.dispatchEvent` ('prd-local-load') to trigger updates from the service layer to the UI.
 ---
 
 ## 2026-02-07 - US-004
-- Implemented read-only mode for external tasks (loaded from PRD).
-- Added `readonly` flag to `Task` and `Column` interfaces.
-- Updated `Board.tsx` to set `readonly` flag for PRD items.
-- Updated `TaskCard.tsx` to display lock icon and disable drag-and-drop for read-only tasks.
-- Updated `BoardColumn.tsx` to hide "Add Item" button for read-only columns.
-- Updated `TaskDetailDialog.tsx` to show read-only view for locked tasks.
+- Updated `Task` interface to include `priority`, `passes`, and `dependsOn`.
+- Updated `Board.tsx` to map PRD fields to `Task` properties.
+- Updated `TaskCard.tsx` to display:
+  - Priority badge (color-coded P1-P5).
+  - Pass/Fail status icon.
+  - Dependency count with link icon.
+- Files changed:
+  - `src/types/kanban.ts`
+  - `src/components/Board.tsx`
+  - `src/components/TaskCard.tsx`
 - **Learnings:**
-  - `dnd-kit`'s `useSortable` `disabled` prop is an easy way to disable dragging for specific items.
-  - Fluent UI icons can be imported individually, but finding the exact name requires checking documentation or package contents if not obvious.
+  - `Task` objects in Kanban were missing fields present in the PRD source (`UserStory`).
+  - Used `@fluentui/react-components` `Badge` and `@fluentui/react-icons` for visual indicators.
+  - Flexbox in `CardFooter` handles variable content width and wrapping gracefully.
+---
+
+## 2026-02-07 - US-005
+- Implemented column mapping logic based on validation status.
+- `passes: false` maps to **To Do**.
+- `passes: true` maps to **Done**.
+- Fallback to existing `status` field if `passes` is undefined.
+- Files changed:
+  - `src/components/Board.tsx`
+- **Learnings:**
+  - `Board` component re-initializes `boardData` when `prd` prop changes, enabling automatic column moves when the file is updated.
+  - Used explicit boolean check (`typeof story.passes === 'boolean'`) to ensure `false` is handled correctly as "To Do", distinguishing it from `undefined`.
 ---

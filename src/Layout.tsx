@@ -48,9 +48,10 @@ interface LayoutProps {
   children: ReactNode;
   taskCount?: number;
   error?: string;
+  lastSynced?: Date;
 }
 
-export const Layout = ({ children, taskCount, error }: LayoutProps) => {
+export const Layout = ({ children, taskCount, error, lastSynced }: LayoutProps) => {
   const styles = useStyles();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -63,6 +64,11 @@ export const Layout = ({ children, taskCount, error }: LayoutProps) => {
           {taskCount !== undefined && (
             <span style={{ fontSize: '14px', opacity: 0.8 }}>
               {taskCount} tasks
+            </span>
+          )}
+          {lastSynced && (
+            <span style={{ fontSize: '12px', opacity: 0.6, marginLeft: '8px' }}>
+              Synced: {lastSynced.toLocaleTimeString()}
             </span>
           )}
           {error && (

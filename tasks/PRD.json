@@ -1,16 +1,16 @@
 {
-  "name": "Visualize PRD.json on Kanban Board",
-  "branchName": "feature/visualize-prdjson",
+  "name": "Local PRD Loader & Rich Card Visualization",
+  "branchName": "feature/local-prd-loader",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Load and Parse PRD.json",
-      "description": "As a user, I want the application to load tasks from the `prd.json` file on startup so that I can see the current session's work items.",
+      "title": "Implement File System Access Service",
+      "description": "As a developer, I want a robust service to handle the File System Access API interactions so that the app can read and watch local files safely.",
       "acceptanceCriteria": [
-        "Application reads `prd.json` from the filesystem root or configured path",
-        "JSON content is parsed into a strictly typed interface/model",
-        "Handle missing or malformed `prd.json` gracefully (show error or empty state)",
-        "Display the count of loaded tasks in the UI"
+        "Implement `openFilePicker` wrapper for `window.showOpenFilePicker`",
+        "Create method to read content from the file handle",
+        "Implement robust error handling (permissions denied, file not found)",
+        "Ensure types are correctly defined for the File System Access API"
       ],
       "priority": 1,
       "passes": true,
@@ -19,14 +19,13 @@
     },
     {
       "id": "US-002",
-      "title": "Map Statuses to Kanban Columns",
-      "description": "As a user, I want tasks to appear in the correct columns based on their status so that I can understand the progress.",
+      "title": "Add File Picker to Settings",
+      "description": "As a user, I want to select my `prd.json` file from the Settings dialog so that I can visualize my specific project.",
       "acceptanceCriteria": [
-        "Map \"todo\" status to \"To Do\" column",
-        "Map \"in_progress\" status to \"In Progress\" column",
-        "Map \"done\" status to \"Done\" column",
-        "Map unknown/other statuses to a default \"Backlog\" or \"To Do\" column",
-        "Render basic card information (Title, ID) in the column"
+        "Add \"Load PRD\" button/section in the Settings dialog",
+        "On click, trigger the File System Access picker",
+        "Display the name of the currently selected file",
+        "Persist the file handle (in IndexedDB or memory) to survive hot-reloads if possible, or gracefully handle reset"
       ],
       "priority": 2,
       "passes": true,
@@ -38,14 +37,13 @@
     {
       "id": "US-003",
       "title": "Real-time File Watcher",
-      "description": "As a user, I want the board to update automatically when I modify `prd.json` externally so that I don't have to manually refresh.",
+      "description": "As a user, I want the board to update automatically when I save changes to my local `prd.json` file.",
       "acceptanceCriteria": [
-        "Implement a file watcher (e.g., `chokidar` or Node `fs.watch`) on `prd.json`",
-        "Trigger a data reload immediately upon file change detection",
-        "Update the UI state without a full page reload",
-        "Debounce rapid updates to prevent UI flickering"
+        "Implement polling/checking mechanism on the active file handle (e.g., check `lastModified` every 1-2s)",
+        "Automatically re-parse and update application state when a change is detected",
+        "Show a subtle \"Synced\" or \"Updated\" indicator when new data loads"
       ],
-      "priority": 3,
+      "priority": 2,
       "passes": true,
       "dependsOn": [
         "US-001"
@@ -54,22 +52,36 @@
     },
     {
       "id": "US-004",
-      "title": "Read-only UI Enforcement",
-      "description": "As a user, I want to be prevented from moving cards or editing them on the board so that I don't mistakenly think I'm updating the source file.",
+      "title": "Enhance Kanban Card Visualization",
+      "description": "As a user, I want to see priority, dependencies, and status directly on the card so that I can make informed decisions without opening details.",
       "acceptanceCriteria": [
-        "Disable drag-and-drop functionality for these specific cards",
-        "Hide or disable \"Add Item\" buttons for the mapped columns",
-        "Visual indication (e.g., lock icon or badge) that these items are managed externally via `prd.json`"
+        "Display `priority` using a visual badge/icon (e.g., color-coded)",
+        "Display a \"Passes/Fails\" status icon based on the `passes` boolean",
+        "Display `dependsOn` count or list in the card footer",
+        "Ensure layout handles missing optional fields gracefully"
       ],
-      "priority": 4,
+      "priority": 3,
       "passes": true,
-      "dependsOn": [
-        "US-002"
+      "dependsOn": [],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-005",
+      "title": "Column Mapping Logic",
+      "description": "As a user, I want tasks to sort into \"Todo\" and \"Done\" columns based on their validation status.",
+      "acceptanceCriteria": [
+        "Map `passes: false` items to the **Todo** column",
+        "Map `passes: true` items to the **Done** column",
+        "Maintain an **In Progress** column (empty by default, but available)",
+        "Ensure cards move columns automatically if the `passes` value changes in the file"
       ],
+      "priority": 3,
+      "passes": true,
+      "dependsOn": [],
       "completionNotes": "Completed by agent"
     }
   ],
   "metadata": {
-    "updatedAt": "2026-02-07T01:50:35.358Z"
+    "updatedAt": "2026-02-07T02:35:01.462Z"
   }
 }

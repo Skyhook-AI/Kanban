@@ -11,9 +11,12 @@ import {
   Switch,
   makeStyles,
   tokens,
+  Text,
 } from "@fluentui/react-components";
 import { useState, useEffect } from "react";
 import { StorageService } from "../services/StorageService";
+import { FileSystemService } from "../services/FileSystemService";
+import { PrdService } from "../services/PrdService";
 import { useTheme } from "../contexts/ThemeContext";
 
 const useStyles = makeStyles({
@@ -32,6 +35,11 @@ const useStyles = makeStyles({
   },
   errorMessage: {
     color: tokens.colorPaletteRedForeground1,
+  },
+  fileInfo: {
+    fontSize: tokens.fontSizeBase200,
+    color: tokens.colorNeutralForeground2,
+    marginTop: "5px",
   }
 });
 
@@ -49,14 +57,18 @@ export const SettingsDialog = ({
   const [webhookUrl, setWebhookUrl] = useState("");
   const [testStatus, setTestStatus] = useState<string | null>(null);
   const [isTestSuccess, setIsTestSuccess] = useState<boolean>(false);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
       const settings = StorageService.loadSettings();
+      const currentHandle = PrdService.getHandle();
+      
       // Use setTimeout to avoid synchronous state update in effect warning
       const timer = setTimeout(() => {
         setWebhookUrl(settings.webhookUrl || "");
         setTestStatus(null);
+        setSelectedFileName(currentHandle ? currentHandle.name : null);
       }, 0);
       return () => clearTimeout(timer);
     }
@@ -65,6 +77,31 @@ export const SettingsDialog = ({
   const handleSave = () => {
     StorageService.saveSettings({ webhookUrl });
     onOpenChange(false);
+  };
+
+  const handleLoadPrd = async () => {
+    try {
+      const handles = await FileSystemService.openFilePicker({
+        types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }],
+        multiple: false
+      });
+
+      if (handles && handles.length > 0) {
+        const handle = handles[0];
+        PrdService.setHandle(handle);
+        setSelectedFileName(handle.name);
+        
+        // Dispatch event to notify App to reload data
+        window.dispatchEvent(new Event('prd-local-load'));
+      }
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      if (msg !== 'User cancelled file selection.') {
+        console.error('Failed to load PRD file:', error);
+        setTestStatus(`Error loading file: ${msg}`);
+        setIsTestSuccess(false);
+      }
+    }
   };
 
   const handleTestWebhook = async () => {
@@ -116,6 +153,24 @@ export const SettingsDialog = ({
                 label={theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
               />
             </div>
+            
+            <div className={styles.field}>
+              <Label>Project Data</Label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Button onClick={handleLoadPrd}>Load PRD File</Button>
+                {selectedFileName && (
+                  <Text className={styles.fileInfo}>
+                    Current: {selectedFileName}
+                  </Text>
+                )}
+              </div>
+              {!selectedFileName && (
+                <Text className={styles.fileInfo} style={{ fontSize: '12px' }}>
+                  Using default /prd.json
+                </Text>
+              )}
+            </div>
+
             <div className={styles.field}>
               <Label htmlFor="webhook-url">Webhook URL</Label>
               <Input
