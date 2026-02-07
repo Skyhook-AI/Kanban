@@ -20,6 +20,7 @@ const useStyles = makeStyles({
     height: 'fit-content',
     cursor: 'grab',
     touchAction: 'none',
+    backgroundColor: tokens.colorNeutralBackground1,
   },
   dragging: {
     opacity: 0.5,
