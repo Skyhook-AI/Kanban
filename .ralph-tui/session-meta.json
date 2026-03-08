@@ -1,15 +1,14 @@
 {
-  "id": "817729bc-cb3f-46f3-b986-5ab2babb2ff5",
-  "status": "completed",
-  "startedAt": "2026-02-07T02:23:12.451Z",
-  "updatedAt": "2026-02-07T02:46:10.781Z",
+  "id": "6f2ad17c-7d0c-4edb-9e77-894ee34414ce",
+  "status": "running",
+  "startedAt": "2026-03-08T04:35:54.317Z",
+  "updatedAt": "2026-03-08T04:38:38.405Z",
   "agentPlugin": "opencode",
   "trackerPlugin": "json",
   "prdPath": "./tasks/prd.json",
-  "currentIteration": 5,
+  "currentIteration": 3,
   "maxIterations": 10,
   "totalTasks": 0,
-  "tasksCompleted": 5,
-  "cwd": "/Users/openclaw/Repos/Kanban",
-  "endedAt": "2026-02-07T02:46:10.781Z"
+  "tasksCompleted": 3,
+  "cwd": "/Users/openclaw/.openclaw/workspace/Repos/Kanban"
 }

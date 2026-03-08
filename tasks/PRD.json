@@ -1,87 +1,70 @@
 {
-  "name": "Local PRD Loader & Rich Card Visualization",
-  "branchName": "feature/local-prd-loader",
+  "name": "Kanban App Documentation Rewrite",
+  "branchName": "feature/kanban-app-doc-rewrite",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Implement File System Access Service",
-      "description": "As a developer, I want a robust service to handle the File System Access API interactions so that the app can read and watch local files safely.",
+      "title": "Rewrite README with setup instructions",
+      "description": "As a user or contributor, I want clear instructions for installing, running, and testing the Kanban app locally so that onboarding is simple and reproducible.",
       "acceptanceCriteria": [
-        "Implement `openFilePicker` wrapper for `window.showOpenFilePicker`",
-        "Create method to read content from the file handle",
-        "Implement robust error handling (permissions denied, file not found)",
-        "Ensure types are correctly defined for the File System Access API"
+        "Instructions for installing dependencies with pnpm, npm, or yarn",
+        "How to run the app locally (command line and browser)",
+        "Basic testing commands explained",
+        "Steps formatted for different platforms (macOS, Windows, Linux)",
+        "pnpm typecheck passes",
+        "pnpm lint passes",
+        "Automated markdown lint and CI rules must pass"
       ],
       "priority": 1,
       "passes": true,
       "dependsOn": [],
+      "notes": "",
       "completionNotes": "Completed by agent"
     },
     {
       "id": "US-002",
-      "title": "Add File Picker to Settings",
-      "description": "As a user, I want to select my `prd.json` file from the Settings dialog so that I can visualize my specific project.",
+      "title": "Document core app features",
+      "description": "As an end-user, I want the README to explain board creation, task addition, editing, and deleting so that I can use the key Kanban features confidently.",
       "acceptanceCriteria": [
-        "Add \"Load PRD\" button/section in the Settings dialog",
-        "On click, trigger the File System Access picker",
-        "Display the name of the currently selected file",
-        "Persist the file handle (in IndexedDB or memory) to survive hot-reloads if possible, or gracefully handle reset"
+        "Step-by-step guidance for creating boards and tasks",
+        "Editing and deleting workflows described",
+        "Clear descriptions for UI elements involved",
+        "Screenshots or mockup images included for each major feature",
+        "pnpm typecheck passes",
+        "pnpm lint passes",
+        "Automated markdown lint and CI rules must pass"
       ],
       "priority": 2,
       "passes": true,
       "dependsOn": [
         "US-001"
       ],
+      "notes": "",
       "completionNotes": "Completed by agent"
     },
     {
       "id": "US-003",
-      "title": "Real-time File Watcher",
-      "description": "As a user, I want the board to update automatically when I save changes to my local `prd.json` file.",
+      "title": "Add troubleshooting and FAQ section",
+      "description": "As a user, I want a troubleshooting and FAQ section in the README so that I can resolve common issues without external help.",
       "acceptanceCriteria": [
-        "Implement polling/checking mechanism on the active file handle (e.g., check `lastModified` every 1-2s)",
-        "Automatically re-parse and update application state when a change is detected",
-        "Show a subtle \"Synced\" or \"Updated\" indicator when new data loads"
+        "Troubleshooting section addresses common installation/running errors",
+        "FAQ covers user questions about board/task management",
+        "Tips for resolving dependency or environment problems",
+        "Links to further support resources provided",
+        "pnpm typecheck passes",
+        "pnpm lint passes",
+        "Automated markdown lint and CI rules must pass"
       ],
-      "priority": 2,
+      "priority": 3,
       "passes": true,
       "dependsOn": [
-        "US-001"
+        "US-002"
       ],
-      "completionNotes": "Completed by agent"
-    },
-    {
-      "id": "US-004",
-      "title": "Enhance Kanban Card Visualization",
-      "description": "As a user, I want to see priority, dependencies, and status directly on the card so that I can make informed decisions without opening details.",
-      "acceptanceCriteria": [
-        "Display `priority` using a visual badge/icon (e.g., color-coded)",
-        "Display a \"Passes/Fails\" status icon based on the `passes` boolean",
-        "Display `dependsOn` count or list in the card footer",
-        "Ensure layout handles missing optional fields gracefully"
-      ],
-      "priority": 3,
-      "passes": true,
-      "dependsOn": [],
-      "completionNotes": "Completed by agent"
-    },
-    {
-      "id": "US-005",
-      "title": "Column Mapping Logic",
-      "description": "As a user, I want tasks to sort into \"Todo\" and \"Done\" columns based on their validation status.",
-      "acceptanceCriteria": [
-        "Map `passes: false` items to the **Todo** column",
-        "Map `passes: true` items to the **Done** column",
-        "Maintain an **In Progress** column (empty by default, but available)",
-        "Ensure cards move columns automatically if the `passes` value changes in the file"
-      ],
-      "priority": 3,
-      "passes": true,
-      "dependsOn": [],
+      "notes": "",
       "completionNotes": "Completed by agent"
     }
   ],
   "metadata": {
-    "updatedAt": "2026-02-07T02:35:01.462Z"
+    "updatedAt": "2026-03-08T04:38:38.397Z"
   }
 }
